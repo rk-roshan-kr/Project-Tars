@@ -38,7 +38,10 @@
 }
 
 body {
-  background-color: var(--color-void);
+  background-color: #000;
+  /* Fallback */
+  background: transparent;
+  /* Allow canvas at z-index -1 to shine */
   color: var(--color-holo-white);
   font-family: var(--font-data);
   line-height: 1.8;
