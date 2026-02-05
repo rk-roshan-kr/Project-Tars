@@ -39,9 +39,15 @@ export default function Mentor() {
                     </p>
 
                     <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                        <p className="text-dim" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>PRIMARY INVESTIGATOR</p>
-                        <h3 style={{ fontSize: '1.5rem' }}>Roshan Kumar Gupta</h3>
-                        <p style={{ opacity: 0.6 }}>Department of Computer Science & Engineering</p>
+                        <p className="text-dim" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>RESEARCH CONTEXT</p>
+                        <p style={{ opacity: 0.6 }}>
+                            Dr. Thakur provides critical oversight on the application of signal processing algorithms for the T.A.R.S. pipeline.
+                        </p>
+                        <div style={{ marginTop: '1rem' }}>
+                            <Link to="/operator" style={{ color: 'var(--color-warning-red)', textDecoration: 'none' }}>
+                                View Primary Investigator Profile &rarr;
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

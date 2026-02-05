@@ -7,6 +7,7 @@ import PageTransition from './components/PageTransition';
 const Landing = lazy(() => import('./pages/Landing'));
 const System = lazy(() => import('./pages/System'));
 const Mentor = lazy(() => import('./pages/Mentor'));
+const Operator = lazy(() => import('./pages/Operator'));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -27,6 +28,11 @@ function AnimatedRoutes() {
         <Route path="/mentor" element={
           <PageTransition>
             <Mentor />
+          </PageTransition>
+        } />
+        <Route path="/operator" element={
+          <PageTransition>
+            <Operator />
           </PageTransition>
         } />
       </Routes>

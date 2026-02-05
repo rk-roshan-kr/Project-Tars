@@ -33,6 +33,16 @@ export default function DataStream({ scrollYProgress }) {
             particles[i * 4 + 3] = Math.random() * 0.5 + 0.1; // Speed
         }
 
+        // MOUSE INTERACTION
+        let mouseX = -1000;
+        let mouseY = -1000;
+
+        const handleMouseMove = (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+
         const render = () => {
             time += 0.01;
 
@@ -83,6 +93,29 @@ export default function DataStream({ scrollYProgress }) {
 
                 // PROPULSION
                 z -= s * speedMult * 0.1;
+
+                // MOUSE GRAVITY / REPULSION (The "Juice")
+                // Only affect particles "close" to the screen (z < 10)
+                if (z < 10) {
+                    // Project 3D point to 2D
+                    const perspective = 500 / z;
+                    const sx = width / 2 + x / z * perspective;
+                    const sy = height / 2 + y / z * perspective;
+
+                    // Calculate distance to mouse
+                    const dx = sx - mouseX;
+                    const dy = sy - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 200) {
+                        const force = (200 - dist) / 200;
+                        // Repel
+                        x += (dx / dist) * force * 50 * s; // Push x actual
+                        y += (dy / dist) * force * 50 * s; // Push y actual
+                        particles[i * 4] = x;
+                        particles[i * 4 + 1] = y;
+                    }
+                }
 
                 // ORBITAL TWIST (Phase 3)
                 if (progress > 0.4 && progress < 0.6) {
@@ -140,6 +173,7 @@ export default function DataStream({ scrollYProgress }) {
 
         return () => {
             window.removeEventListener('resize', resize);
+            window.removeEventListener('mousemove', handleMouseMove); // Cleanup
             cancelAnimationFrame(animationFrameId);
         };
     }, []);

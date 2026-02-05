@@ -182,14 +182,24 @@ export default function System() {
                         <VizCard title="CASE 112" label="PHYSICS VETO" color="#ff3333" />
                     </div>
 
-                    <div style={{ marginTop: '5rem', textAlign: 'center' }}>
-                        <div className="font-display" style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>OPERATOR: ROSHAN KUMAR GUPTA</div>
-                        <div className="font-data text-dim" style={{ marginBottom: '2rem' }}>
-                            Supervised by Dr. Garima Thakur
+                    <div style={{ marginTop: '5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
+
+                        {/* OPERATOR LINK */}
+                        <div>
+                            <div className="font-display" style={{ fontSize: '1.2rem', marginBottom: '0.5rem', opacity: 0.8 }}>LEAD RESEARCHER</div>
+                            <Link to="/operator" className="font-data slide-link" style={{ fontSize: '1.5rem', color: '#fff', textDecoration: 'none', borderBottom: '2px solid var(--color-warning-red)' }}>
+                                ROSHAN KUMAR GUPTA
+                            </Link>
                         </div>
-                        <Link to="/mentor" className="font-data text-red" style={{ textDecoration: 'none', borderBottom: '1px solid currentColor' }}>
-                            VIEW ACADEMIC SUPERVISION &rarr;
-                        </Link>
+
+                        {/* MENTOR LINK */}
+                        <div style={{ opacity: 0.6 }}>
+                            <div className="font-data text-dim" style={{ fontSize: '0.9rem' }}>Supervised by Dr. Garima Thakur</div>
+                            <Link to="/mentor" className="font-data" style={{ fontSize: '0.9rem', color: 'var(--color-warning-red)', textDecoration: 'none', borderBottom: '1px solid currentColor' }}>
+                                VIEW SUPERVISOR PROFILE &rarr;
+                            </Link>
+                        </div>
+
                     </div>
                 </div>
 
