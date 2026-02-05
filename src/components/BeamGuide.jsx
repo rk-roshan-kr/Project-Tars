@@ -10,11 +10,11 @@ export default function BeamGuide() {
             zIndex: 20,
             pointerEvents: 'none'
         }}>
-            {/* CORE: Yondu's Arrow / Energy Photon */}
+            {/* CORE: Yondu's Arrow / Energy Photon (Vertical) */}
             <motion.div
                 animate={{
-                    x: [0, 10, 0], // Slight horizontal sway
-                    y: [-2, 2, -2], // Weaving motion
+                    x: [-2, 2, -2], // Horizontal weaving
+                    y: [0, 10, 0], // Slight vertical bob
                 }}
                 transition={{
                     duration: 2,
@@ -22,24 +22,24 @@ export default function BeamGuide() {
                     ease: "easeInOut"
                 }}
                 style={{
-                    width: '60px',
-                    height: '4px',
+                    width: '4px',
+                    height: '60px', // Vertical elongation
                     background: '#fff',
                     borderRadius: '2px',
-                    boxShadow: '0 0 20px #fff, 0 0 40px #ff0055', // Bright core + red glow
+                    boxShadow: '0 0 20px #fff, 0 0 40px #ff0055',
                     position: 'relative'
                 }}
             >
-                {/* TRAIL / WHISTLE */}
+                {/* TRAIL / WHISTLE (Behind/Above) */}
                 <motion.div
                     style={{
                         position: 'absolute',
-                        right: '100%',
-                        top: '50%',
-                        height: '1px',
-                        width: '100px',
-                        background: 'linear-gradient(90deg, transparent, rgba(255, 68, 68, 0.8))',
-                        transform: 'translateY(-50%)'
+                        bottom: '100%', // Trail behind (above) the arrow
+                        left: '50%',
+                        width: '1px',
+                        height: '100px',
+                        background: 'linear-gradient(0deg, transparent, rgba(255, 68, 68, 0.8))',
+                        transform: 'translateX(-50%)' // Center trail
                     }}
                 />
             </motion.div>
