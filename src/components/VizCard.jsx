@@ -1,22 +1,47 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-export default function VizCard({ title, label, color, type = "normal" }) {
+export default function VizCard({ title, label, color }) {
+    const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect(); // Use currentTarget for the container
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Tilt intensity
+        const rotateX = ((y - centerY) / centerY) * -15; // Invert axis
+        const rotateY = ((x - centerX) / centerX) * 15;
+
+        setTilt({ x: rotateX, y: rotateY });
+    };
+
+    const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
+
     return (
         <motion.div
-            whileHover="hover"
+            className="glass-panel font-data"
             initial="rest"
-            className="glass-panel"
+            whileHover="hover"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
             style={{
-                width: '240px',
-                height: '320px',
+                width: '300px',
+                height: '340px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '1.5rem',
-                borderTop: `4px solid ${color}`,
+                padding: '2rem',
+                borderTop: `3px solid ${color}`,
                 position: 'relative',
                 overflow: 'hidden',
-                cursor: 'crosshair'
+                transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+                transition: 'transform 0.1s ease-out',
+                boxShadow: `0 0 20px -10px ${color}`,
+                cursor: 'crosshair',
+                backgroundColor: 'rgba(5, 5, 5, 0.9)' // Ensure it's not transparent white
             }}
         >
             {/* Header */}
