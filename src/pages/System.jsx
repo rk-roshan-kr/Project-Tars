@@ -24,16 +24,7 @@ const PhaseLabel = ({ id, name }) => (
 );
 
 const Station = ({ phaseId, phaseName, title, children }) => (
-    <div style={{
-        width: '100vw',
-        minHeight: '100vh', // Standard Vertical Block
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '0 15vw', // Push content away from the left beam
-        position: 'relative',
-        borderLeft: '1px solid rgba(255, 68, 68, 0.1)' // Faint guides
-    }}>
+    <div className="station-container">
         <PhaseLabel id={phaseId} name={phaseName} />
         <h2 className="font-display" style={{
             fontSize: 'clamp(2rem, 5vw, 4rem)',
@@ -134,10 +125,24 @@ export default function System() {
                 <Station phaseId="1" phaseName="DISTORTION" title={(<span className="glitch-text" data-text="THE NOISE FLOOR">THE NOISE FLOOR</span>)}>
                     <p><strong>You are now passing through the distortion field.</strong></p>
                     <p style={{ marginTop: '1.5rem' }}>
-                        Standard algorithms fail here. They see chaos, apply a sigma-clip, and discard the data.
+                        This is a hardware problem. The sheer density of photometric data saturates standard VRAM buffers.
                     </p>
-                    <p style={{ marginTop: '1.5rem' }}>
-                        TARS does not filter. It listens to the static.
+
+                    {/* BOTTLENECK VISUALIZATION */}
+                    <div style={{ marginTop: '2rem', padding: '1.5rem', border: '1px solid #333', background: 'rgba(0,0,0,0.5)' }}>
+                        <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.5rem' }}>SYSTEM DIAGNOSTIC</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#ff4444' }}>
+                            <div style={{ width: '10px', height: '10px', background: '#ff4444', borderRadius: '50%', boxShadow: '0 0 10px #ff4444' }} />
+                            <div className="font-display">BUFFER OVERFLOW // LATENCY &gt; 500ms</div>
+                        </div>
+                        <div style={{ fontSize: '0.8rem', marginTop: '0.5rem', opacity: 0.6 }}>
+                            "Compute Hardware saturated. Dropping frames."
+                        </div>
+                    </div>
+
+                    <p style={{ marginTop: '2rem', borderLeft: '2px solid #00ff88', paddingLeft: '1rem' }}>
+                        <strong style={{ color: '#00ff88' }}>TARS BYPASSES THE GPU.</strong><br />
+                        We utilize direct-to-metal data streaming, processing signals in the L1 Cache before they even hit the main buffer.
                     </p>
                 </Station>
 

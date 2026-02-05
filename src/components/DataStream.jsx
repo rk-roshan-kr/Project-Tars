@@ -22,7 +22,7 @@ export default function DataStream({ scrollYProgress }) {
         resize();
 
         // PARTICLE SYSTEM
-        const particleCount = 1000;
+        const particleCount = 4000; // Increased massively
         const particles = new Float32Array(particleCount * 4); // x, y, z, speed
 
         // INITIALIZE
@@ -30,7 +30,7 @@ export default function DataStream({ scrollYProgress }) {
             particles[i * 4] = (Math.random() - 0.5) * width * 2;
             particles[i * 4 + 1] = (Math.random() - 0.5) * height * 2;
             particles[i * 4 + 2] = Math.random() * 20; // Z depth
-            particles[i * 4 + 3] = Math.random() * 0.5 + 0.1; // Speed
+            particles[i * 4 + 3] = Math.random() * 0.5 + 0.5; // Higher base speed
         }
 
         // MOUSE INTERACTION
@@ -58,23 +58,23 @@ export default function DataStream({ scrollYProgress }) {
 
             // GLOBAL FX
             let shake = 0;
-            let speedMult = 1 + (progress * 10); // Standard propulsion
+            // CONSTANT WARP SPEED (Decoupled from scroll)
+            let speedMult = 30;
             let colorShift = 0;
 
             if (progress < 0.2) {
                 // DISTORTION
                 shake = (0.2 - progress) * 10;
-                speedMult = 2;
             } else if (progress < 0.4) {
                 // DETECTION
-                speedMult = 20; // Warp speed
+                // pure warp
             } else if (progress < 0.6) {
                 // ORBIT
-                speedMult = 5;
+                // pure warp
             } else if (progress < 0.8) {
                 // VETO
                 colorShift = 1; // Red
-                speedMult = 2;
+                speedMult = 40; // Even faster for red shift
                 shake = 2;
             }
 

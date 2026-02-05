@@ -49,9 +49,15 @@ export default function Operator() {
                     </p>
 
                     <div style={{ padding: '1.5rem', background: 'rgba(255, 68, 68, 0.1)', border: '1px solid rgba(255, 68, 68, 0.3)' }}>
-                        <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--color-warning-red)' }}>RESEARCH OBJECTIVE</h3>
+                        <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: 'var(--color-warning-red)' }}>CURRENT STATE (v1.1)</h3>
+                        <p style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '1.5rem' }}>
+                            <strong>INSTRUMENT VALIDATION:</strong> TARS is currently a high-precision filter. It operates as a deterministic detector, ensuring safety and purity in signal classification (Low Recall, High Precision).
+                        </p>
+
+                        <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#fff' }}>TRAJECTORY (v1.2)</h3>
                         <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-                            To develop and validate physics-aware ML models that can autonomously distinguish between planetary transits and astrophysical false positives (eclipsing binaries) with >99.4% confidence using high-fidelity signal processing.
+                            <strong>THE DISCOVERY ENGINE:</strong> Shifting focus from "Detection" to "Recovery".
+                            By implementing <span style={{ color: '#00ff88' }}>Multi-Sector Stitching</span> and <span style={{ color: '#00ff88' }}>Adaptive Physics Thresholds</span>, the next iteration aims to recover long-period candidates hidden by geometric gaps in standard data pipelines.
                         </p>
                     </div>
 
