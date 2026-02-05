@@ -186,7 +186,7 @@ export default function System() {
 
                         {/* OPERATOR LINK */}
                         <div>
-                            <div className="font-display" style={{ fontSize: '1.2rem', marginBottom: '0.5rem', opacity: 0.8 }}>LEAD RESEARCHER</div>
+                            <div className="font-display" style={{ fontSize: '1.2rem', marginBottom: '0.5rem', opacity: 0.8 }}>OPERATOR</div>
                             <Link to="/operator" className="font-data slide-link" style={{ fontSize: '1.5rem', color: '#fff', textDecoration: 'none', borderBottom: '2px solid var(--color-warning-red)' }}>
                                 ROSHAN KUMAR GUPTA
                             </Link>

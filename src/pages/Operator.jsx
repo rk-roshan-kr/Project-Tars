@@ -24,7 +24,7 @@ export default function Operator() {
                     marginBottom: '4rem',
                     color: 'var(--color-holo-white)'
                 }}>
-                    LEAD<br /><span className="text-red">RESEARCHER</span>
+                    MISSION<br /><span className="text-red">OPERATOR</span>
                 </h1>
 
                 <div className="glass-panel font-data" style={{ padding: '3rem', borderLeft: '2px solid var(--color-warning-red)' }}>
@@ -32,7 +32,7 @@ export default function Operator() {
                         <div>
                             <p className="text-dim" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>OPERATOR ID: RKG-001</p>
                             <h2 style={{ fontSize: '2.5rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>Roshan Kumar Gupta</h2>
-                            <p style={{ fontSize: '1.2rem', color: 'var(--color-warning-red)', marginBottom: '2rem' }}>Lead Researcher & System Architect</p>
+                            <p style={{ fontSize: '1.2rem', color: 'var(--color-warning-red)', marginBottom: '2rem' }}>System Architect & Developer</p>
                         </div>
                         <div style={{ border: '1px solid #fff', padding: '0.5rem 1rem', fontSize: '0.8rem', opacity: 0.8 }}>
                             [STATUS: ACTIVE]
