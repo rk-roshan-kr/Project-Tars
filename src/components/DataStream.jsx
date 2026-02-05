@@ -1,9 +1,7 @@
 import { useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
-export default function DataStream() {
+export default function DataStream({ scrollYProgress }) {
     const canvasRef = useRef(null);
-    const location = useLocation();
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -12,10 +10,7 @@ export default function DataStream() {
         const ctx = canvas.getContext('2d', { alpha: false });
         let animationFrameId;
         let width, height;
-
-        // WARP STATE
-        let speedMultiplier = 1;
-        let targetSpeed = 1;
+        let time = 0;
 
         const resize = () => {
             width = window.innerWidth;
@@ -26,156 +21,116 @@ export default function DataStream() {
         window.addEventListener('resize', resize);
         resize();
 
-        // WARP TRIGGER
-        speedMultiplier = 20; // Instant jump on load/route change
+        // PARTICLE SYSTEM
+        const particleCount = 1000;
+        const particles = new Float32Array(particleCount * 4); // x, y, z, speed
 
-        // ENTITY CLASSES
-        class Particle {
-            constructor() {
-                this.reset(true);
-            }
-
-            reset(initial = false) {
-                this.x = (Math.random() - 0.5) * width * 2; // Wide spread
-                this.y = (Math.random() - 0.5) * height * 2;
-                this.z = initial ? Math.random() * 20 : 20; // Start far back
-                this.len = Math.random() * 50 + 10;
-                this.color = Math.random() > 0.8 ? '#ff3333' : '#444444'; // Red or Dim Grey
-                this.baseSpeed = Math.random() * 0.5 + 0.1;
-            }
-
-            update(speed) {
-                // Move towards camera (decrease Z)
-                this.z -= (0.1 * this.baseSpeed * speed);
-
-                // Respawn if passed camera
-                if (this.z <= 0.1) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                if (this.z <= 0.1) return;
-
-                const perspective = 500 / this.z; // FOV 500
-                const screenX = width / 2 + this.x / this.z * perspective;
-                const screenY = height / 2 + this.y / this.z * perspective;
-
-                // Don't draw if out of bounds massively
-                if (screenX < -100 || screenX > width + 100 || screenY < -100 || screenY > height + 100) return;
-
-                const prevPerspective = 500 / (this.z + 0.5 * speedMultiplier * 0.1);
-                const tailX = width / 2 + this.x / (this.z + 0.1) * perspective * 0.9;
-                const tailY = height / 2 + this.y / (this.z + 0.1) * perspective * 0.9;
-
-                // Length-based streak logic
-                ctx.beginPath();
-                ctx.strokeStyle = this.color;
-                // Opacity fades as it gets very close to avoid "popping"
-                const opacity = Math.min(1, (this.z - 0.1) / 2);
-                ctx.globalAlpha = opacity;
-                ctx.lineWidth = (10 / this.z) * 0.5;
-
-                ctx.moveTo(screenX, screenY);
-                ctx.lineTo(tailX, tailY);
-                ctx.stroke();
-                ctx.globalAlpha = 1;
-            }
+        // INITIALIZE
+        for (let i = 0; i < particleCount; i++) {
+            particles[i * 4] = (Math.random() - 0.5) * width * 2;
+            particles[i * 4 + 1] = (Math.random() - 0.5) * height * 2;
+            particles[i * 4 + 2] = Math.random() * 20; // Z depth
+            particles[i * 4 + 3] = Math.random() * 0.5 + 0.1; // Speed
         }
-
-        class Anomaly {
-            constructor() {
-                this.active = false;
-                this.x = 0;
-                this.y = 0;
-                this.radius = 0;
-                this.angle = 0;
-                this.speed = 0;
-                this.color = '#ffffff';
-                this.type = 'probe'; // 'probe' or 'ufo'
-            }
-
-            spawn() {
-                this.active = true;
-                this.y = Math.random() * height * 0.6 + height * 0.2; // Central vertical band
-                this.x = -100; // Start off-screen left
-                this.speed = Math.random() * 2 + 1;
-                this.angle = 0;
-                this.type = Math.random() > 0.5 ? 'probe' : 'drone';
-                this.color = this.type === 'probe' ? '#00aaaa' : '#ffaa00';
-            }
-
-            update() {
-                if (!this.active) {
-                    // Random chance to spawn (1 in 2000 frames ~ 33s)
-                    if (Math.random() < 0.0005) this.spawn();
-                    return;
-                }
-
-                this.x += this.speed;
-                this.angle += 0.05;
-
-                // Sine wave motion
-                const hoverY = this.y + Math.sin(this.angle) * 20;
-
-                // Draw
-                ctx.save();
-                ctx.translate(this.x, hoverY);
-
-                // Glow
-                ctx.shadowBlur = 20;
-                ctx.shadowColor = this.color;
-                ctx.fillStyle = this.color;
-
-                if (this.type === 'probe') {
-                    // Small orb
-                    ctx.beginPath();
-                    ctx.arc(0, 0, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                    // Scan line
-                    ctx.strokeStyle = this.color;
-                    ctx.beginPath();
-                    ctx.moveTo(0, 0);
-                    ctx.lineTo(0, 50); // Downward scan
-                    ctx.stroke();
-                } else {
-                    // Drone (diamond)
-                    ctx.beginPath();
-                    ctx.moveTo(0, -5);
-                    ctx.lineTo(5, 0);
-                    ctx.lineTo(0, 5);
-                    ctx.lineTo(-5, 0);
-                    ctx.fill();
-                }
-
-                ctx.restore();
-
-                // Deactivate if off screen right
-                if (this.x > width + 100) this.active = false;
-            }
-        }
-
-        const particleCount = width < 768 ? 200 : 500;
-        const particles = Array.from({ length: particleCount }, () => new Particle());
-        const anomaly = new Anomaly();
 
         const render = () => {
-            // Ease speed
-            speedMultiplier += (targetSpeed - speedMultiplier) * 0.05;
+            time += 0.01;
 
-            // Clear with trail effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            // GET PHASE (0-1)
+            const progress = scrollYProgress ? scrollYProgress.get() : 0;
+
+            // Phases: 
+            // 0.0-0.2: DISTORTION (Noise)
+            // 0.2-0.4: DETECTION (Tunnel)
+            // 0.4-0.6: ORBIT (Ring)
+            // 0.6-0.8: VETO (Red Shift)
+            // 0.8-1.0: DECISION (Calm)
+
+            // GLOBAL FX
+            let shake = 0;
+            let speedMult = 1 + (progress * 10); // Standard propulsion
+            let colorShift = 0;
+
+            if (progress < 0.2) {
+                // DISTORTION
+                shake = (0.2 - progress) * 10;
+                speedMult = 2;
+            } else if (progress < 0.4) {
+                // DETECTION
+                speedMult = 20; // Warp speed
+            } else if (progress < 0.6) {
+                // ORBIT
+                speedMult = 5;
+            } else if (progress < 0.8) {
+                // VETO
+                colorShift = 1; // Red
+                speedMult = 2;
+                shake = 2;
+            }
+
+            // CLEAR
+            ctx.fillStyle = `rgba(${colorShift * 20}, 0, 0, 0.2)`;
             ctx.fillRect(0, 0, width, height);
 
-            // Particles
-            particles.forEach(p => {
-                p.update(speedMultiplier);
-                p.draw();
-            });
+            // UPDATE & DRAW
+            ctx.fillStyle = colorShift ? '#ff0000' : '#ffffff';
 
-            // Anomaly
-            if (speedMultiplier < 2) { // Only show when not warping
-                anomaly.update();
+            for (let i = 0; i < particleCount; i++) {
+                let x = particles[i * 4];
+                let y = particles[i * 4 + 1];
+                let z = particles[i * 4 + 2];
+                let s = particles[i * 4 + 3];
+
+                // PROPULSION
+                z -= s * speedMult * 0.1;
+
+                // ORBITAL TWIST (Phase 3)
+                if (progress > 0.4 && progress < 0.6) {
+                    const angle = 0.05;
+                    const cos = Math.cos(angle);
+                    const sin = Math.sin(angle);
+                    const nx = x * cos - y * sin;
+                    const ny = x * sin + y * cos;
+                    x = nx;
+                    y = ny;
+                    particles[i * 4] = x;
+                    particles[i * 4 + 1] = y;
+                }
+
+                // RESET
+                if (z <= 0.1) {
+                    z = 20;
+                    x = (Math.random() - 0.5) * width * 2;
+                    y = (Math.random() - 0.5) * height * 2;
+                }
+
+                particles[i * 4 + 2] = z;
+
+                // PROJECT
+                const perspective = 500 / z;
+                const sx = width / 2 + x / z * perspective + (Math.random() - 0.5) * shake;
+                const sy = height / 2 + y / z * perspective + (Math.random() - 0.5) * shake;
+
+                // RENDER
+                if (sx > 0 && sx < width && sy > 0 && sy < height) {
+                    const size = (10 / z) * 0.5;
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // WAVEFORM (Phase 2 Local FX)
+            if (progress > 0.2 && progress < 0.4) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 2;
+                for (let k = 0; k < width; k += 10) {
+                    const wy = height / 2 + Math.sin(k * 0.01 + time * 10) * 50 * Math.sin(progress * Math.PI * 5);
+                    if (k === 0) ctx.moveTo(k, wy);
+                    else ctx.lineTo(k, wy);
+                }
+                ctx.stroke();
             }
 
             animationFrameId = requestAnimationFrame(render);
@@ -187,7 +142,7 @@ export default function DataStream() {
             window.removeEventListener('resize', resize);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [location.pathname]);
+    }, []);
 
     return (
         <canvas

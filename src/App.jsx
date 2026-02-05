@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import DataStream from './components/DataStream';
 import PageTransition from './components/PageTransition';
 
 // Lazy load pages
@@ -38,7 +37,6 @@ function AnimatedRoutes() {
 function App() {
   return (
     <Router>
-      <DataStream />
       <main className="app-container">
         <Suspense fallback={<div className="font-data text-dim" style={{ padding: '2rem', textAlign: 'center' }}>INITIALIZING...</div>}>
           <AnimatedRoutes />
